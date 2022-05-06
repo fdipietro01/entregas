@@ -5,42 +5,38 @@ class Contenedor {
     this.cont = 0;
   }
 
-  save(object) {
+  async save(object) {
     this.cont++;
     let id;
 
     let agregarItem = async (item) => {
       try {
         await fs.promises.writeFile(this.path, JSON.stringify(item));
-        return "ok"
+        return "ok";
       } catch (error) {
         ("Error de escritura");
       }
     };
 
     if (this.cont === 1) {
-      let item = [{...object, id: 1}];
-      id = item[0].id
-      agregarItem(item);
-      return id
+      let item = [{ ...object, id: 1 }];
+      id = item[0].id;
+      await agregarItem(item);
     } else {
-      (async () => {
-        try {
-          const items = await this.getAll();
-          /* console.log("previos", items); */
-          id = items[items.length - 1].id + 1;
-          items.push({...object, id: id});
-          /* console.log("despues", items); */
-          await agregarItem(items);
-          return id
-        } catch (error) {
-          console.log("Error de escritura - método save", error);
-        }
-      })();
+      try {
+        const items = await this.getAll();
+        /* console.log("previos", items); */
+        id = items[items.length - 1].id + 1;
+        items.push({ ...object, id: id });
+        /* console.log("despues", items); */
+        await agregarItem(items);
+        return id;
+      } catch (error) {
+        console.log("Error de escritura - método save", error);
+      }
     }
-   
+    return id;
   }
-
   async getById(id) {
     try {
       const content = JSON.parse(
@@ -56,17 +52,17 @@ class Contenedor {
 
   async getAll() {
     try {
-      const content = await fs.promises.readFile(this.path, "utf-8");
-      return JSON.parse(content);
+      const content = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
+      return (content);
     } catch (error) {
-      console.log("Error de búsqueda total - método getAll");
-      return []
+      console.log("Error de lectura", error);
+      return [];
     }
   }
 
   async deleteById(id) {
     try {
-      const content = await JSON.parse(fs.promises.readFile(this.path));
+      const content = JSON.parse(await fs.promises.readFile(this.path));
       const object = content.filter((obj) => obj.id !== id);
       await fs.promises.writeFile(this.path, JSON.stringify(object));
     } catch (error) {
@@ -75,7 +71,7 @@ class Contenedor {
   }
   async deleteAll() {
     try {
-      await fs.promises.writeFile(this.path, "");
+      await fs.promises.writeFile(this.path, "[]");
     } catch (error) {
       console.log("Error de supreción total - método deleteAll");
     }
@@ -99,32 +95,50 @@ const objects = [
     price: 300,
     thumbnail: "imagen3",
   },
+  {
+    title: "nombre4",
+    price: 400,
+    thumbnail: "imagen4",
+  },
+  {
+    title: "nombre5",
+    price: 500,
+    thumbnail: "imagen5",
+  },
 ];
 
 let container = new Contenedor("productos.txt");
-const agregarItems = () => {
-  let obj = 0;
-  const id = setInterval(() => {
-    console.log(container.save(objects[obj]));
-    obj++;
-  }, 1000);
-  setTimeout(() => {
-    clearInterval(id);
-  }, 3500);
-};
 
-const agregarObjetos = async()=>{
-  await container.save(objects[0]);
-  await container.save(objects[1]);
-  await container.save(objects[2]);
+/*Función que:
+ -agrega 5 objetos al archivo en forma de lista y consologuea el id que retorna cada operación.
+ -busca un elemento de la lista del archivo por id y lo consologuea
+ -busca un elemento de la lista del archivo por id y lo elimina
+ -elimina todo el contenido del archivo
+ */
+
+
+ async function Secuencia() {
+  const object1 = await container.save(objects[0]);
+  console.log("id", object1);
+  const object2 = await container.save(objects[1]);
+  console.log("id", object2);
+  const object3 = await container.save(objects[2]);
+  console.log("id", object3);
+  const object4 = await container.save(objects[3]);
+  console.log("id", object4);
+  const object5 = await container.save(objects[4]);
+  console.log("id", object5);
+
+  let elementoBuscado = await container.getById(3);
+  console.log("El buscado:", elementoBuscado);
+
+  await container.deleteById(3);
+  const afterDeleteById = await container.getAll();
+  console.log("Despues de eliminar por id quedó así:", afterDeleteById);
+
+  await container.deleteAll();
+  const afterDeleteAll= await container.getAll();
+  console.log("Despues de eliminar todo quedó así:", afterDeleteAll)
 }
 
-const buscar = async () => {
-  let elementoBuscado = await container.getById(1);
-  console.log(elementoBuscado, "el buscado");
-};
-
-agregarItems();
-buscar();
-/* agregarObjetos() */
-
+Secuencia()
