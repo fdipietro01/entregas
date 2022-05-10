@@ -1,0 +1,25 @@
+{
+  "name": "entregas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "desafios.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"./files node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fdipietro01/entregas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fdipietro01/entregas/issues"
+  },
+  "homepage": "https://github.com/fdipietro01/entregas#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.16"
+  }
+}

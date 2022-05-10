@@ -25,10 +25,8 @@ class Contenedor {
     } else {
       try {
         const items = await this.getAll();
-        /* console.log("previos", items); */
         id = items[items.length - 1].id + 1;
         items.push({ ...object, id: id });
-        /* console.log("despues", items); */
         await agregarItem(items);
         return id;
       } catch (error) {
@@ -78,43 +76,15 @@ class Contenedor {
   }
 }
 
-const objects = [
-  {
-    title: "nombre1",
-    price: 100,
-    thumbnail: "imagen1",
-  },
+module.exports = Contenedor
 
-  {
-    title: "nombre2",
-    price: 200,
-    thumbnail: "imagen2",
-  },
-  {
-    title: "nombre3",
-    price: 300,
-    thumbnail: "imagen3",
-  },
-  {
-    title: "nombre4",
-    price: 400,
-    thumbnail: "imagen4",
-  },
-  {
-    title: "nombre5",
-    price: 500,
-    thumbnail: "imagen5",
-  },
-];
+/* let container = new Contenedor("productos.txt");
 
-let container = new Contenedor("productos.txt");
-
-/*Función que:
+Función que:
  -agrega 5 objetos al archivo en forma de lista y consologuea el id que retorna cada operación.
  -busca un elemento de la lista del archivo por id y lo consologuea
  -busca un elemento de la lista del archivo por id y lo elimina
  -elimina todo el contenido del archivo
- */
 
 
  async function Secuencia() {
@@ -141,4 +111,4 @@ let container = new Contenedor("productos.txt");
   console.log("Despues de eliminar todo quedó así:", afterDeleteAll)
 }
 
-Secuencia()
+Secuencia() */
