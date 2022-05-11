@@ -5,7 +5,7 @@
   "main": "desafios.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"./files node server.js"
+    "start":"nodemon files/server.js"
   },
   "repository": {
     "type": "git",
